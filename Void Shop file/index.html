@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>VOID — Radical Fashion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,900;1,400;1,900&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+<!-- NAVBAR  -->
+<nav id="navbar">
+  <div class="nav-logo" data-nav="home">VÖ<span>ID</span></div>
+  <ul class="nav-links">
+    <li><a data-nav="collections">Collections</a></li>
+    <li><a data-nav="tshirts">T-Shirts</a></li>
+    <li><a data-nav="trousers">Trousers</a></li>
+    <li><a data-nav="footwear">Footwear</a></li>
+    <li><a data-nav="drops">New Drops</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-user-area" id="navUserArea"></div>
+    <button class="nav-search-btn" id="navSearchBtn" title="Search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+    </button>
+    <button class="nav-wish-btn" id="navWishBtn" title="Wishlist" data-nav="wishlist">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span class="wish-badge" id="wishBadge">0</span>
+    </button>
+    <button class="nav-bag-btn" id="navBagBtn">Bag <span class="bag-count" id="bagCount">0</span></button>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ═══ MOBILE MENU ═══ -->
+<div id="mobile-menu">
+  <a data-nav="home" data-close>VÖID</a>
+  <a data-nav="collections" data-close>Collections</a>
+  <a data-nav="tshirts" data-close>T-Shirts</a>
+  <a data-nav="trousers" data-close>Trousers</a>
+  <a data-nav="footwear" data-close>Footwear</a>
+  <a data-nav="drops" data-close>New Drops</a>
+  <a data-nav="wishlist" data-close>Wishlist ♡</a>
+  <div class="m-divider"></div>
+  <div class="m-auth-row" id="mobileAuthRow">
+  </div>
+  <button class="m-bag-btn" id="mBagBtn">Open Bag</button>
+</div>
+
+<!-- ═══ BAG OVERLAY  ═══ -->
+<div id="bag-overlay"></div>
+<div id="bag-drawer">
+  <div class="bag-head">
+    <div>
+      <div class="bag-head-title">YOUR BAG</div>
+      <div class="bag-head-count" id="bagHeadCount">0 items</div>
+    </div>
+    <button class="bag-close" id="bagClose">✕</button>
+  </div>
+  <div class="bag-items" id="bagItems"></div>
+  <div class="bag-foot" id="bagFoot" style="display:none">
+    <div class="bag-subtotal">
+      <span class="bag-subtotal-label">Subtotal</span>
+      <span class="bag-subtotal-val" id="bagTotal">₹ 0</span>
+    </div>
+    <p class="bag-note">Taxes & shipping calculated at checkout. Free shipping above ₹ 50,000.</p>
+    <button class="btn-checkout">Proceed to Checkout →</button>
+    <button class="btn-continue" id="bagContinue">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- ═══ Toast ═══ -->
+<div id="toast"></div>
+
+<!-- ═══ Auth Model ═══ -->
+<div id="auth-overlay">
+  <div id="auth-modal" class="auth-modal-wrap">
+    <button class="auth-close-x" id="authCloseX">✕</button>
+    <div class="auth-tabs">
+      <button class="auth-tab act" id="tabLogin" onclick="switchTab('login')">Login</button>
+      <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+
+    <!-- LogIN -->
+    <div class="auth-body" id="loginBody">
+      <div class="auth-head">
+        <div class="auth-title">WELCOME BACK</div>
+        <div class="auth-sub">Sign in to access your orders, wishlist & exclusive drops.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" type="email" id="loginEmail" placeholder="you@example.com"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="loginPass" placeholder="••••••••"/>
+        <div class="form-error" id="loginErr">Incorrect email or password.</div>
+      </div>
+      <button class="auth-submit" onclick="doLogin()">Sign In →</button>
+      <div class="auth-divider"><span>or</span></div>
+      <div class="social-row">
+        <button class="social-btn" onclick="socialLogin('Google')">Google</button>
+        <button class="social-btn" onclick="socialLogin('Apple')">Apple</button>
+      </div>
+      <div class="auth-footer-row">
+        <span class="auth-switch">No account? <a onclick="switchTab('signup')">Create one</a></span>
+        <a class="auth-switch" style="color:var(--muted);font-size:12px;cursor:pointer">Forgot Password?</a>
+      </div>
+    </div>
+
+    <!-- SignUP -->
+    <div class="auth-body" id="signupBody" style="display:none">
+      <div class="auth-head">
+        <div class="auth-title">JOIN VÖID</div>
+        <div class="auth-sub">Create your account for early access, order tracking & member pricing.</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" type="text" id="signupFirst" placeholder="Aryan"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input class="form-input" type="text" id="signupLast" placeholder="Sharma"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" type="email" id="signupEmail" placeholder="you@example.com"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="signupPass" placeholder="Min 6 characters"/>
+        <div class="form-error" id="signupErr"></div>
+      </div>
+      <button class="auth-submit" onclick="doSignup()">Create Account →</button>
+      <div class="auth-divider"><span>or</span></div>
+      <div class="social-row">
+        <button class="social-btn" onclick="socialLogin('Google')">Google</button>
+        <button class="social-btn" onclick="socialLogin('Apple')">Apple</button>
+      </div>
+      <div class="auth-footer-row">
+        <span class="auth-switch">Already have an account? <a onclick="switchTab('login')">Sign in</a></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Search ═══ -->
+<div id="search-overlay">
+  <button class="search-close-x" id="searchCloseBtn">✕ Close</button>
+  <div class="search-wrap">
+    <div class="search-label">Search Products</div>
+    <div class="search-input-row">
+      <input class="search-input" id="searchInput" type="text" placeholder="tee, trouser, shoe…" autocomplete="off"/>
+      <button class="search-clear" id="searchClear">✕</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+    <div class="search-empty" id="searchEmpty" style="display:none">No products found for "<span id="searchTerm"></span>"</div>
+  </div>
+</div>
+
+<!-- ═══  VIEW MODEL ═══ -->
+<div id="qv-overlay">
+  <div id="qv-modal">
+    <button class="qv-close" id="qvClose">✕</button>
+    <div class="qv-img-side">
+      <img id="qvImg" src="" alt=""/>
+    </div>
+    <div class="qv-info-side">
+      <div class="qv-tag" id="qvTag"></div>
+      <div class="qv-name" id="qvName"></div>
+      <div class="qv-price" id="qvPrice"></div>
+      <div class="qv-desc" id="qvDesc"></div>
+      <div class="qv-label">Select Size</div>
+      <div class="size-grid" id="qvSizes"></div>
+      <div class="size-err" id="sizeErr">Please select a size first.</div>
+      <div class="qv-actions">
+        <button class="qv-add-bag" id="qvAddBag">Add to Bag →</button>
+        <button class="qv-add-wish" id="qvAddWish" title="Save to Wishlist">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+      </div>
+      <div class="qv-details">
+        <div class="qv-detail-row"><span class="qv-detail-key">Material</span><span class="qv-detail-val" id="qvMaterial"></span></div>
+        <div class="qv-detail-row"><span class="qv-detail-key">Fit</span><span class="qv-detail-val" id="qvFit"></span></div>
+        <div class="qv-detail-row"><span class="qv-detail-key">Origin</span><span class="qv-detail-val" id="qvOrigin"></span></div>
+        <div class="qv-detail-row"><span class="qv-detail-key">SKU</span><span class="qv-detail-val" id="qvSku"></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Order Success ═══ -->
+<div id="order-success">
+  <div class="success-icon">✓</div>
+  <div class="success-title">ORDER PLACED</div>
+  <div class="success-order" id="successOrderId"></div>
+  <div class="success-sub">We'll send a confirmation to your email</div>
+  <button class="success-back" onclick="closeOrderSuccess()">Continue Shopping</button>
+</div>
+
+<!-- ═══════════ All Pages ═══════════ -->
+
+<!-- Home -->
+<div class="page active" id="page-home">
+  <div data-scroll-container>
+    <section class="hero" data-scroll-section>
+      <div class="hero-left">
+        <div>
+          <div class="hero-badge">SS 2026 — Drop Zero</div>
+          <h1 class="hero-h1">VOID<br><span class="r">OF</span><br>FORM</h1>
+        </div>
+        <div>
+          <p class="hero-desc">Clothing built on contradiction — raw construction, refined intention. Each piece is a deliberate act of deconstruction.</p>
+          <div class="hero-ctas">
+            <button class="btn-fill" data-nav="collections">Shop Collections</button>
+            <button class="btn-out" data-nav="drops">New Drops</button>
+          </div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80" alt="Hero" class="hero-img" id="heroImg"/>
+        <div class="hero-num">01</div>
+      </div>
+    </section>
+    <div class="ticker"><div class="ticker-track" id="t1"></div></div>
+    <section class="sec" data-scroll-section>
+      <div class="sec-top">
+        <div class="sec-num">00</div>
+        <div><div class="sec-eye">Curated Drops — All Seasons</div><h2 class="sec-title">Collections</h2></div>
+        <a class="sec-more" data-nav="collections">Browse All →</a>
+      </div>
+      <div class="coll-grid" id="homeCollGrid"></div>
+    </section>
+    <div class="ticker"><div class="ticker-track" id="t2"></div></div>
+    <section class="sec" data-scroll-section>
+      <div class="sec-top">
+        <div class="sec-num">01</div>
+        <div><div class="sec-eye">Category 01 — Elevated Basics</div><h2 class="sec-title">T-Shirts</h2></div>
+        <a class="sec-more" data-nav="tshirts">See All →</a>
+      </div>
+      <div class="prod-grid-a" id="homeTshirts"></div>
+    </section>
+    <div class="mag">
+      <div class="mag-img-wrap"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80" alt="" class="mag-img"/></div>
+      <div class="mag-txt">
+        <div class="mag-label">Members Archive — Invite Only</div>
+        <div class="mag-quote">"Wear the void. Own the silence."</div>
+        <button class="btn-white">Join the Archive</button>
+      </div>
+    </div>
+    <section class="sec" data-scroll-section>
+      <div class="sec-top">
+        <div class="sec-num">02</div>
+        <div><div class="sec-eye">Category 02 — Tailored Silhouettes</div><h2 class="sec-title">Trousers</h2></div>
+        <a class="sec-more" data-nav="trousers">See All →</a>
+      </div>
+      <div class="prod-grid-b" id="homeTrousers"></div>
+    </section>
+    <div class="ticker"><div class="ticker-track" id="t3"></div></div>
+    <section class="sec" data-scroll-section>
+      <div class="sec-top">
+        <div class="sec-num">03</div>
+        <div><div class="sec-eye">Category 03 — The Final Word</div><h2 class="sec-title">Footwear</h2></div>
+        <a class="sec-more" data-nav="footwear">See All →</a>
+      </div>
+      <div class="prod-grid-c" id="homeFootwear"></div>
+    </section>
+    <div class="feat">
+      <div class="feat-item"><div class="feat-icon">◈</div><div class="feat-label">Delivery</div><div class="feat-title">Pan India Shipping</div></div>
+      <div class="feat-item"><div class="feat-icon">◉</div><div class="feat-label">Origin</div><div class="feat-title">Hand Crafted</div></div>
+      <div class="feat-item"><div class="feat-icon">◫</div><div class="feat-label">Policy</div><div class="feat-title">30-Day Returns</div></div>
+      <div class="feat-item"><div class="feat-icon">◎</div><div class="feat-label">Material</div><div class="feat-title">Deadstock Fabrics</div></div>
+    </div>
+    <footer>
+      <div class="foot-grid">
+        <div><div class="foot-brand">VÖ<span>ID</span></div><p class="foot-tag">Radical fashion. Every drop is intentional. Every silence is design.</p></div>
+        <div class="foot-col"><h5>Shop</h5><ul><li><a data-nav="tshirts">T-Shirts</a></li><li><a data-nav="trousers">Trousers</a></li><li><a data-nav="footwear">Footwear</a></li><li><a data-nav="drops">New Drops</a></li></ul></div>
+        <div class="foot-col"><h5>Studio</h5><ul><li><a>About</a></li><li><a>Manifesto</a></li><li><a>Press</a></li><li><a>Sustainability</a></li></ul></div>
+        <div class="foot-col"><h5>Help</h5><ul><li><a>Sizing Guide</a></li><li><a>Shipping</a></li><li><a>Returns</a></li><li><a>Contact</a></li></ul></div>
+      </div>
+      <div class="foot-btm">
+        <span>© 2026 VÖID Studio.</span>
+        <span style="letter-spacing:3px;font-size:10px;text-transform:uppercase;color:#555">Mumbai · Delhi · Bangalore</span>
+        <span>Privacy · Terms · Cookies</span>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<!-- Collections -->
+<div class="page" id="page-collections">
+  <div data-scroll-container>
+    <section class="sec" style="padding-top:110px">
+      <div class="sec-top">
+        <div class="sec-num">00</div>
+        <div><div class="sec-eye">All Curated Drops</div><h2 class="sec-title">Collections</h2></div>
+      </div>
+      <div class="coll-grid" id="fullCollGrid"></div>
+    </section>
+    <div class="feat">
+      <div class="feat-item"><div class="feat-icon">◈</div><div class="feat-label">Delivery</div><div class="feat-title">Pan India Shipping</div></div>
+      <div class="feat-item"><div class="feat-icon">◉</div><div class="feat-label">Origin</div><div class="feat-title">Hand Crafted</div></div>
+      <div class="feat-item"><div class="feat-icon">◫</div><div class="feat-label">Policy</div><div class="feat-title">30-Day Returns</div></div>
+      <div class="feat-item"><div class="feat-icon">◎</div><div class="feat-label">Material</div><div class="feat-title">Deadstock Fabrics</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- All Collections Details  -->
+<div class="page" id="page-coll-detail">
+  <div data-scroll-container>
+    <div class="coll-detail-hero">
+      <img id="cdImg" src="" alt=""/>
+      <div class="coll-detail-hero-content">
+        <button class="back-btn-white" data-nav="collections">← Collections</button>
+        <div class="coll-detail-tag" id="cdTag"></div>
+        <div class="coll-detail-title" id="cdTitle"></div>
+        <div class="coll-detail-meta" id="cdMeta"></div>
+      </div>
+    </div>
+    <section class="sec">
+      <div class="sec-top">
+        <div class="sec-num" id="cdNum">01</div>
+        <div><div class="sec-eye" id="cdEye">All pieces</div><h2 class="sec-title" id="cdSub">The Collection</h2></div>
+      </div>
+      <div class="prod-grid-full" id="cdProducts"></div>
+    </section>
+    <div class="feat">
+      <div class="feat-item"><div class="feat-icon">◈</div><div class="feat-label">Delivery</div><div class="feat-title">Pan India Shipping</div></div>
+      <div class="feat-item"><div class="feat-icon">◉</div><div class="feat-label">Origin</div><div class="feat-title">Hand Crafted</div></div>
+      <div class="feat-item"><div class="feat-icon">◫</div><div class="feat-label">Policy</div><div class="feat-title">30-Day Returns</div></div>
+      <div class="feat-item"><div class="feat-icon">◎</div><div class="feat-label">Material</div><div class="feat-title">Deadstock Fabrics</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- T-SHIRTS -->
+<div class="page" id="page-tshirts">
+  <div data-scroll-container>
+    <section class="sec" style="padding-top:110px">
+      <div class="sec-top">
+        <div class="sec-num">01</div>
+        <div><div class="sec-eye">Category 01 — Elevated Basics</div><h2 class="sec-title">T-Shirts</h2></div>
+        <button class="back-btn" style="margin:0" data-nav="home">← Home</button>
+      </div>
+      <div class="prod-grid-full" id="fullTshirts"></div>
+    </section>
+    <div class="mag">
+      <div class="mag-img-wrap"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80" alt="" class="mag-img"/></div>
+      <div class="mag-txt"><div class="mag-label">Archive Tees — Limited</div><div class="mag-quote">"Every thread intentional."</div><button class="btn-white">Explore Archive</button></div>
+    </div>
+    <div class="feat">
+      <div class="feat-item"><div class="feat-icon">◈</div><div class="feat-label">Fabric</div><div class="feat-title">100% Organic Cotton</div></div>
+      <div class="feat-item"><div class="feat-icon">◉</div><div class="feat-label">Fit</div><div class="feat-title">Oversized Cut</div></div>
+      <div class="feat-item"><div class="feat-icon">◫</div><div class="feat-label">Care</div><div class="feat-title">Cold Wash Only</div></div>
+      <div class="feat-item"><div class="feat-icon">◎</div><div class="feat-label">Origin</div><div class="feat-title">Made in India</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TROUSERS -->
+<div class="page" id="page-trousers">
+  <div data-scroll-container>
+    <section class="sec" style="padding-top:110px">
+      <div class="sec-top">
+        <div class="sec-num">02</div>
+        <div><div class="sec-eye">Category 02 — Tailored Silhouettes</div><h2 class="sec-title">Trousers</h2></div>
+        <button class="back-btn" style="margin:0" data-nav="home">← Home</button>
+      </div>
+      <div class="prod-grid-full" id="fullTrousers"></div>
+    </section>
+    <div class="feat">
+      <div class="feat-item"><div class="feat-icon">◈</div><div class="feat-label">Fabric</div><div class="feat-title">Wool & Linen Blend</div></div>
+      <div class="feat-item"><div class="feat-icon">◉</div><div class="feat-label">Fit</div><div class="feat-title">Wide Leg Silhouette</div></div>
+      <div class="feat-item"><div class="feat-icon">◫</div><div class="feat-label">Care</div><div class="feat-title">Dry Clean</div></div>
+      <div class="feat-item"><div class="feat-icon">◎</div><div class="feat-label">Origin</div><div class="feat-title">Atelier Crafted</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTSHOES -->
+<div class="page" id="page-footwear">
+  <div data-scroll-container>
+    <section class="sec" style="padding-top:110px">
+      <div class="sec-top">
+        <div class="sec-num">03</div>
+        <div><div class="sec-eye">Category 03 — The Final Word</div><h2 class="sec-title">Footwear</h2></div>
+        <button class="back-btn" style="margin:0" data-nav="home">← Home</button>
+      </div>
+      <div class="prod-grid-full" id="fullFootwear"></div>
+    </section>
+    <div class="feat">
+      <div class="feat-item"><div class="feat-icon">◈</div><div class="feat-label">Material</div><div class="feat-title">Full Grain Leather</div></div>
+      <div class="feat-item"><div class="feat-icon">◉</div><div class="feat-label">Sole</div><div class="feat-title">Rubber Commando</div></div>
+      <div class="feat-item"><div class="feat-icon">◫</div><div class="feat-label">Care</div><div class="feat-title">Leather Conditioner</div></div>
+      <div class="feat-item"><div class="feat-icon">◎</div><div class="feat-label">Origin</div><div class="feat-title">Handmade in Agra</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- NEW DROP -->
+<div class="page" id="page-drops">
+  <div data-scroll-container>
+    <section class="sec" style="padding-top:110px">
+      <div class="sec-top">
+        <div class="sec-num" style="color:var(--red);font-size:52px;line-height:1">NEW</div>
+        <div><div class="sec-eye">Just Dropped — Limited Quantities</div><h2 class="sec-title">New Drops</h2></div>
+        <button class="back-btn" style="margin:0" data-nav="home">← Home</button>
+      </div>
+      <div class="prod-grid-full" id="fullDrops"></div>
+    </section>
+    <div class="mag">
+      <div class="mag-img-wrap"><img src="https://images.unsplash.com/photo-1536766820879-059fec98ec0a?w=900&q=80" alt="" class="mag-img"/></div>
+      <div class="mag-txt"><div class="mag-label">Drop Alerts</div><div class="mag-quote">"Be first. Always."</div><button class="btn-white">Join Waitlist</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- WISHLIST -->
+<div class="page" id="page-wishlist">
+  <section class="sec" style="padding-top:110px">
+    <div class="sec-top">
+      <div class="sec-num" style="color:var(--red)">♡</div>
+      <div><div class="sec-eye">Saved Items</div><h2 class="sec-title">Wishlist</h2></div>
+      <button class="back-btn" style="margin:0" data-nav="home">← Home</button>
+    </div>
+    <div id="wishlistGrid" class="prod-grid-full"></div>
+    <div id="wishlistEmpty" class="empty-wish" style="display:none">
+      <div class="empty-wish-icon">♡</div>
+      <div class="empty-wish-txt">Your wishlist is empty</div>
+      <div class="empty-wish-sub">Save items you love for later</div>
+      <button class="btn-fill" style="margin-top:16px" data-nav="collections">Browse Collections</button>
+    </div>
+  </section>
+</div>
+
+<!-- CHECKOUT -->
+<div class="page" id="page-checkout">
+  <div class="checkout-wrap">
+    <div class="checkout-left">
+      <div class="checkout-step">Step 1 of 1</div>
+      <div class="checkout-title">CHECKOUT</div>
+
+      <div class="checkout-section">
+        <div class="checkout-section-title">Contact Information</div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" id="coEmail" placeholder="you@example.com"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input class="form-input" type="tel" id="coPhone" placeholder="+91 98765 43210"/>
+        </div>
+      </div>
+
+      <div class="checkout-section">
+        <div class="checkout-section-title">Shipping Address</div>
+        <div class="checkout-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input class="form-input" type="text" id="coFirst" placeholder="Aryan"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" type="text" id="coLast" placeholder="Sharma"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Address Line 1</label>
+          <input class="form-input" type="text" id="coAddr1" placeholder="Flat 4B, Infinity Towers"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Address Line 2 (optional)</label>
+          <input class="form-input" type="text" id="coAddr2" placeholder="Near Metro Gate 2"/>
+        </div>
+        <div class="checkout-row">
+          <div class="form-group">
+            <label class="form-label">City</label>
+            <input class="form-input" type="text" id="coCity" placeholder="Mumbai"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">PIN Code</label>
+            <input class="form-input" type="text" id="coPin" placeholder="400001"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">State</label>
+          <input class="form-input" type="text" id="coState" placeholder="Maharashtra"/>
+        </div>
+      </div>
+
+      <div class="checkout-section">
+        <div class="checkout-section-title">Payment Method</div>
+        <div style="display:flex;flex-direction:column;gap:10px;" id="paymentMethods">
+          <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid var(--ink);cursor:pointer;font-size:13px;letter-spacing:1px;">
+            <input type="radio" name="pay" value="upi" checked style="accent-color:var(--red)"/> UPI / QR Code
+          </label>
+          <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid var(--border);cursor:pointer;font-size:13px;letter-spacing:1px;">
+            <input type="radio" name="pay" value="card" style="accent-color:var(--red)"/> Credit / Debit Card
+          </label>
+          <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid var(--border);cursor:pointer;font-size:13px;letter-spacing:1px;">
+            <input type="radio" name="pay" value="cod" style="accent-color:var(--red)"/> Cash on Delivery
+          </label>
+          <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid var(--border);cursor:pointer;font-size:13px;letter-spacing:1px;">
+            <input type="radio" name="pay" value="netbanking" style="accent-color:var(--red)"/> Net Banking
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="checkout-right">
+      <div class="checkout-summary-title">ORDER SUMMARY</div>
+      <div id="checkoutItems"></div>
+      <div class="checkout-totals">
+        <div class="totals-row"><span class="totals-label">Subtotal</span><span class="totals-val" id="coSubtotal">₹ 0</span></div>
+        <div class="totals-row"><span class="totals-label">Shipping</span><span class="totals-val" id="coShipping">FREE</span></div>
+        <div class="totals-row"><span class="totals-label">GST (18%)</span><span class="totals-val" id="coTax">₹ 0</span></div>
+        <div class="totals-row total"><span class="totals-label">Total</span><span class="totals-val" id="coTotal">₹ 0</span></div>
+      </div>
+      <button class="btn-place-order" id="placeOrderBtn">Place Order →</button>
+      <div class="checkout-secure">🔒 Secure Checkout · SSL Encrypted</div>
+      <button class="back-btn" style="margin-top:24px;width:100%;justify-content:center" id="backToBagBtn">← Back to Bag</button>
+    </div>
+  </div>
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
